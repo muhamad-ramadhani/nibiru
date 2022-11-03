@@ -23,6 +23,9 @@ echo "+++++++++++++++++++++++++++++++++++++++++++++++++++++"
 
 sleep 2
 
+
+sleep 2
+
 # set vars
 if [ ! $NODENAME ]; then
 	read -p "Enter node name: " NODENAME
@@ -117,12 +120,14 @@ sudo tee /etc/systemd/system/nibid.service > /dev/null <<EOF
 [Unit]
 Description=nibi
 After=network-online.target
+
 [Service]
 User=$USER
 ExecStart=$(which nibid) start --home $HOME/.nibid
 Restart=on-failure
 RestartSec=3
 LimitNOFILE=65535
+
 [Install]
 WantedBy=multi-user.target
 EOF
@@ -135,3 +140,4 @@ sudo systemctl restart nibid
 echo '=============== SETUP FINISHED ==================='
 echo -e 'To check logs: \e[1m\e[32mjournalctl -u nibid -f -o cat\e[0m'
 echo -e "To check sync status: \e[1m\e[32mcurl -s localhost:${NIBIRU_PORT}657/status | jq .result.sync_info\e[0m"
+
